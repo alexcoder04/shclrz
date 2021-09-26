@@ -37,6 +37,8 @@ interactive menu
 ## TODOs
 
  - [X] read stdin and output colorized version to stdout
- - [ ] a menu with choosing a color, that outputs the appropriate ANSI sequence
- - [ ] 256 color support
+ - [X] a menu with choosing a color, that outputs the appropriate ANSI sequence
+ - [ ] 256-color support
+ - [ ] Makefile and PKGBUILD for installing
+ - [ ] manpage
 
