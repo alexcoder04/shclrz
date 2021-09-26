@@ -1,5 +1,5 @@
 
-# shclrz
+# shclrz - shell colorizer
 
 shclrz (as in **SH**ell **C**o**L**o**R**i**Z**e) is a simple shell script with
 the goal to simplify creating colorful output in the shell.
@@ -7,7 +7,7 @@ the goal to simplify creating colorful output in the shell.
 ## Usage
 
 ```
-shclrz [OPTIONS]
+shclrz [OPTIONS] [COLOR]
 ```
 
 | option | alternative                         | function                 |
@@ -18,12 +18,34 @@ shclrz [OPTIONS]
 | -f     | --foreground, f, foreground [COLOR] | specify foreground color |
 | -b     | --background, b, background [COLOR] | specify background color |
 
+### Examples:
+
+```
+shclrz -g
+```
+
+Opens an interactive menu to select the background/foreground color and enter
+the text. Returns a string which contains the ANSI color sequence for chosen
+color and text.
+
+```
+shclrz -f red <file.txt
+```
+
+Outputs the content of file.txt with red foreground.
+
+```
+ls | shclrz -b blue
+```
+
+Colors the output of ls with blue background.
+
 ### Note:
 
-You cannot use foreground and background at the same time
+You cannot use foreground and background at the same time.
 
 `-f` and `-b` options read the text from stdin; `-g` option provides an
-interactive menu
+interactive menu.
 
 ### List of colors:
 
@@ -50,15 +72,16 @@ sudo make install
 
 ### **Un**installation
 
-On Arch-based: `sudo pacman -R shclrz-git`
+On Arch-based distros: `sudo pacman -R shclrz-git`
 
-On other: go to place where you cloned the git repo to and `sudo make uninstall`
+On other distros: go to place where you cloned the git repo to and
+`sudo make uninstall`
 
 ## TODOs
 
  - [X] read stdin and output colorized version to stdout
  - [X] a menu with choosing a color, that outputs the appropriate ANSI sequence
- - [ ] 256-color support
  - [X] Makefile and PKGBUILD for installing
- - [ ] manpage
+ - [X] manpage
+ - [ ] 256-color support
 
