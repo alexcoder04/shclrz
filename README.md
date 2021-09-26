@@ -13,14 +13,17 @@ shclrz [OPTIONS]
 | option | alternative                         | function                 |
 |--------|-------------------------------------|--------------------------|
 | -h     | --help, help                        | Print help               |
-| -g     | --generate, generate                | Generate ANSI sequence   |
 | -v     | --version, version                  | Print program version    |
+| -g     | --generate, generate                | Generate ANSI sequence   |
 | -f     | --foreground, f, foreground [COLOR] | specify foreground color |
 | -b     | --background, b, background [COLOR] | specify background color |
 
 ### Note:
 
 You cannot use foreground and background at the same time
+
+`-f` and `-b` options read the text from stdin; `-g` option provides an
+interactive menu
 
 ### List of colors:
 

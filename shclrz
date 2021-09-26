@@ -30,12 +30,14 @@ Description: colorizing output in the shell
 
 Usage: shclrz [OPTIONS]
   -h, --help, help                          Print this help
+  -v, --version, version                    Print program version
   -g, --generate, generate                  Generate ANSI sequence
   -f, --foreground, f, foreground [COLOR]   Specify foreground color
   -b, --background, b, background [COLOR]   Specify background color
 
 Note:
   You cannot use foreground and background at the same time
+  -g options provides an interactive menu, -f and -b read text from stdin
 
 List of colors:
   black         blue
