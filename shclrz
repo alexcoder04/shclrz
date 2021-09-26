@@ -1,0 +1,109 @@
+#!/bin/sh
+# used resources:
+# https://stackoverflow.com/questions/6980090/how-to-read-from-a-file-or-standard-input-in-bash
+# https://talyian.github.io/ansicolors/
+# https://gitlab.com/dwt1/shell-color-scripts
+
+VERSION="0.0.1"
+
+die(){
+  echo "Error: $1" >/dev/stderr
+  exit 1
+}
+
+print_version(){
+  cat >>"/dev/stdout" <<EOF
+shclrz - colorizing output in the shell
+v$VERSION
+EOF
+  exit 0
+}
+
+print_help(){
+  cat >>"/dev/stdout" <<EOF
+Description: colorizing output in the shell
+
+Usage: shclrz [OPTIONS]
+  -h, --help, help                          Print this help
+  -f, --foreground, f, foreground [COLOR]   specify foreground color
+  -b, --background, b, background [COLOR]   specify background color
+
+Note:
+  you cannot use foreground and background at the same time
+
+List of colors:
+  black         blue
+  red           magenta
+  green         cyan
+  yellow        white
+
+EOF
+  exit 0
+}
+
+print_with_prefix(){
+  echo -n "$1"
+  while read line
+  do
+    echo "$line"
+  done < "/dev/stdin"
+  echo -n "\033[0m"
+}
+
+print_colorful_foreground(){
+  case "$1" in
+    black) pre="\033[30m" ;;
+    red) pre="\033[31m" ;;
+    green) pre="\033[32m" ;;
+    yellow) pre="\033[33m" ;;
+    blue) pre="\033[34m" ;;
+    magenta) pre="\033[35m" ;;
+    cyan) pre="\033[36m" ;;
+    white) pre="\033[37m" ;;
+    *) die "invalid color" ;;
+  esac
+  print_with_prefix "$pre"
+}
+
+print_colorful_background(){
+  case "$1" in
+    black) pre="\033[40m" ;;
+    red) pre="\033[41m" ;;
+    green) pre="\033[42m" ;;
+    yellow) pre="\033[43m" ;;
+    blue) pre="\033[44m" ;;
+    magenta) pre="033[45m" ;;
+    cyan) pre="033[46m" ;;
+    white) pre="033[47m" ;;
+    *) die "invalid color" ;;
+  esac
+  print_with_prefix "$pre"
+}
+
+
+case "$#" in
+  0)
+    help ;;
+  1)
+    case "$1" in
+      -h|--help|help)
+        print_help ;;
+      -v|--version|version)
+        print_version ;;
+      *)
+        die "invalid argument" ;;
+    esac ;;
+  2)
+    case "$1" in
+      -f|--foreground|f|foreground)
+        print_colorful_foreground "$2" ;;
+      -b|--background|b|background)
+        print_colorful_background "$2" ;;
+      *)
+        die "invalid argument" ;;
+    esac ;;
+  *)
+    die "too many arguments" ;;
+esac
+
+

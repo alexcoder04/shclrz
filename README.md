@@ -6,7 +6,20 @@ the goal to simplify creating colorful output in the shell.
 
 ## Usage
 
-coming soon
+shclrz [OPTIONS]
+  -h, --help, help                          Print help
+  -f, --foreground, f, foreground [COLOR]   specify foreground color
+  -b, --background, b, background [COLOR]   specify background color
+
+### Note:
+  you cannot use foreground and background at the same time
+
+### List of colors:
+  black         blue
+  red           magenta
+  green         cyan
+  yellow        white
+
 
 ## TODOs
 
