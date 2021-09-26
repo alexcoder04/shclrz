@@ -25,11 +25,6 @@ noextract=()
 md5sums=('SKIP')
 validpgpkeys=()
 
-build() {
-  cd "$_pkgname"
-  DESTDIR="$pkgdir/" make clean build
-}
-
 package() {
   cd "$_pkgname"
   NAME="$pkgname" DESTDIR="$pkgdir/" make install
