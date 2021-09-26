@@ -5,9 +5,10 @@
 # https://gitlab.com/dwt1/shell-color-scripts
 
 VERSION="0.0.1"
+DIALOG_FILE="${TMPDIR:-/tmp}/shclrz-dialog-select"
 
 die(){
-  echo "Error: $1" >/dev/stderr
+  echo "Error: $1" >"/dev/stderr"
   exit 1
 }
 
@@ -19,17 +20,22 @@ EOF
   exit 0
 }
 
+cleanup(){
+  rm "$DIALOG_FILE"
+}
+
 print_help(){
   cat >>"/dev/stdout" <<EOF
 Description: colorizing output in the shell
 
 Usage: shclrz [OPTIONS]
   -h, --help, help                          Print this help
-  -f, --foreground, f, foreground [COLOR]   specify foreground color
-  -b, --background, b, background [COLOR]   specify background color
+  -g, --generate, generate                  Generate ANSI sequence
+  -f, --foreground, f, foreground [COLOR]   Specify foreground color
+  -b, --background, b, background [COLOR]   Specify background color
 
 Note:
-  you cannot use foreground and background at the same time
+  You cannot use foreground and background at the same time
 
 List of colors:
   black         blue
@@ -72,24 +78,53 @@ print_colorful_background(){
     green) pre="\033[42m" ;;
     yellow) pre="\033[43m" ;;
     blue) pre="\033[44m" ;;
-    magenta) pre="033[45m" ;;
-    cyan) pre="033[46m" ;;
-    white) pre="033[47m" ;;
+    magenta) pre="\033[45m" ;;
+    cyan) pre="\033[46m" ;;
+    white) pre="\033[47m" ;;
     *) die "invalid color" ;;
   esac
   print_with_prefix "$pre"
 }
 
+generate_sequence(){
+  dialog \
+    --radiolist "Select mode" 10 60 2 \
+    3 foreground on \
+    4 background off \
+    2>"$DIALOG_FILE"
+  mode="$(cat "$DIALOG_FILE")"
+  dialog \
+    --radiolist "Select color" 20 60 8 \
+    0 black on \
+    1 red off \
+    2 green off \
+    3 yellow off \
+    4 blue off \
+    5 magenta off \
+    6 cyan off \
+    7 white off \
+    2>"$DIALOG_FILE"
+  code="$(cat "$DIALOG_FILE")"
+  dialog \
+    --inputbox "Enter your text" 10 60 \
+    2>"$DIALOG_FILE"
+  dialog \
+    --title "Use this string:" \
+    --msgbox '\033['"${mode}${code}m$(cat "$DIALOG_FILE")"'\033[0m' 10 60
+  cleanup
+}
 
 case "$#" in
   0)
-    help ;;
+    print_help ;;
   1)
     case "$1" in
       -h|--help|help)
         print_help ;;
       -v|--version|version)
         print_version ;;
+      -g|--generate|generate)
+        generate_sequence ;;
       *)
         die "invalid argument" ;;
     esac ;;
@@ -105,5 +140,4 @@ case "$#" in
   *)
     die "too many arguments" ;;
 esac
-
 

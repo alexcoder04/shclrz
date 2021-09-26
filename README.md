@@ -13,19 +13,30 @@ shclrz [OPTIONS]
 | option | alternative                         | function                 |
 |--------|-------------------------------------|--------------------------|
 | -h     | --help, help                        | Print help               |
+| -g     | --generate, generate                | Generate ANSI sequence   |
 | -v     | --version, version                  | Print program version    |
 | -f     | --foreground, f, foreground [COLOR] | specify foreground color |
 | -b     | --background, b, background [COLOR] | specify background color |
 
 ### Note:
-  you cannot use foreground and background at the same time
+
+You cannot use foreground and background at the same time
 
 ### List of colors:
-  black         blue
-  red           magenta
-  green         cyan
-  yellow        white
 
+black
+blue
+red
+magenta
+green
+cyan
+yellow
+white
+
+## Dependencies
+
+ - POSIX-compliant shell
+ - dialog
 
 ## TODOs
 
