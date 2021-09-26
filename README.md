@@ -45,7 +45,7 @@ sudo pacman -U shclrz-git-*.pkg.tar.zst
 sudo apt update && sudo apt install make git dialog
 git clone https://github.com/alexcoder04/shclrz.git
 cd shclrz
-sudo make clean build install
+sudo make install
 ```
 
 ### **Un**installation

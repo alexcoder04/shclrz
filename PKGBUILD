@@ -23,7 +23,7 @@ changelog=
 source=("git+$url")
 noextract=()
 md5sums=('SKIP')
-validgpgkeys=()
+validpgpkeys=()
 
 build() {
   cd "$_pkgname"
