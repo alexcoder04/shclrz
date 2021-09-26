@@ -27,18 +27,11 @@ interactive menu
 
 ### List of colors:
 
-black
-blue
-red
-magenta
-green
-cyan
-yellow
-white
+`black` `blue` `red` `magenta` `green` `cyan` `yellow` `white`
 
 ## Dependencies
 
- - POSIX-compliant shell
+ - POSIX-compliant shell (e. g. dash)
  - dialog
 
 ## TODOs
