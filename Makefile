@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 NAME = shclrz
 
-PREFIX ?= /usr/local
+PREFIX ?= /usr
 
 
 build:

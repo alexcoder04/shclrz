@@ -1,4 +1,4 @@
-
+# Maintainer: alexcoder04 <https://github.com/alexcoder04>
 pkgname=shclrz-git
 _pkgname=shclrz
 pkgver=0.0.1
