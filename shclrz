@@ -1,11 +1,12 @@
 #!/bin/sh
 # used resources:
-# https://stackoverflow.com/questions/6980090/how-to-read-from-a-file-or-standard-input-in-bash
-# https://talyian.github.io/ansicolors/
-# https://gitlab.com/dwt1/shell-color-scripts
+# https://en.wikipedia.org/wiki/ANSI_escape_code
 
-VERSION="0.0.1"
+VERSION="0.1.0"
 DIALOG_FILE="${TMPDIR:-/tmp}/shclrz-dialog-select"
+
+RESETER="\033[0m"
+SOURCE_FILE="/dev/stdin"
 
 die(){
   echo "Error: $1" >"/dev/stderr"
@@ -28,16 +29,19 @@ print_help(){
   cat >>"/dev/stdout" <<EOF
 Description: colorizing output in the shell
 
-Usage: shclrz [OPTIONS]
-  -h, --help, help                          Print this help
-  -v, --version, version                    Print program version
-  -g, --generate, generate                  Generate ANSI sequence
-  -f, --foreground, f, foreground [COLOR]   Specify foreground color
-  -b, --background, b, background [COLOR]   Specify background color
+Usage: shclrz [ -h | --help ]
+              [ -v | --version ]
+              [ -g | --generate ]
+              [ -s | --source-file  SOURCE_FILE ]
+              [ -b | --background   COLOR ]
+              [ -f | --foreground   COLOR ]
+              [ -F | --formatting   OPTION ]
 
 Note:
-  You cannot use foreground and background at the same time
-  -g options provides an interactive menu, -f and -b read text from stdin
+  -g option provides an interactive menu,
+  -f and -b read text from stdin or a file
+
+  not all formatting options are supported by all terminals
 
 List of colors:
   black         blue
@@ -45,58 +49,17 @@ List of colors:
   green         cyan
   yellow        white
 
+Formatting options:
+  bold          dim
+  italic        underline
+
 EOF
   exit 0
 }
 
-print_with_prefix(){
-  echo -n "$1"
-  while read line
-  do
-    echo "$line"
-  done < "/dev/stdin"
-  echo -n "\033[0m"
-}
-
-print_colorful_foreground(){
-  case "$1" in
-    black) pre="\033[30m" ;;
-    red) pre="\033[31m" ;;
-    green) pre="\033[32m" ;;
-    yellow) pre="\033[33m" ;;
-    blue) pre="\033[34m" ;;
-    magenta) pre="\033[35m" ;;
-    cyan) pre="\033[36m" ;;
-    white) pre="\033[37m" ;;
-    *) die "invalid color" ;;
-  esac
-  print_with_prefix "$pre"
-}
-
-print_colorful_background(){
-  case "$1" in
-    black) pre="\033[40m" ;;
-    red) pre="\033[41m" ;;
-    green) pre="\033[42m" ;;
-    yellow) pre="\033[43m" ;;
-    blue) pre="\033[44m" ;;
-    magenta) pre="\033[45m" ;;
-    cyan) pre="\033[46m" ;;
-    white) pre="\033[47m" ;;
-    *) die "invalid color" ;;
-  esac
-  print_with_prefix "$pre"
-}
-
 generate_sequence(){
   dialog \
-    --radiolist "Select mode" 10 60 2 \
-    3 foreground on \
-    4 background off \
-    2>"$DIALOG_FILE"
-  mode="$(cat "$DIALOG_FILE")"
-  dialog \
-    --radiolist "Select color" 20 60 8 \
+    --radiolist "Background" 20 60 8 \
     0 black on \
     1 red off \
     2 green off \
@@ -106,40 +69,99 @@ generate_sequence(){
     6 cyan off \
     7 white off \
     2>"$DIALOG_FILE"
-  code="$(cat "$DIALOG_FILE")"
+  export BACKGROUND_COLOR="$(cat "$DIALOG_FILE")"
+
+  dialog \
+    --radiolist "Foreground" 20 60 8 \
+    0 black on \
+    1 red off \
+    2 green off \
+    3 yellow off \
+    4 blue off \
+    5 magenta off \
+    6 cyan off \
+    7 white off \
+    2>"$DIALOG_FILE"
+  export FOREGROUND_COLOR="$(cat "$DIALOG_FILE")"
+
+  dialog \
+    --radiolist "Formatting" 20 60 5 \
+    0 none on \
+    1 bold off \
+    2 dim off \
+    3 italic off \
+    4 underline off \
+    2>"$DIALOG_FILE"
+  export FORMATTING="$(cat "$DIALOG_FILE")"
+
   dialog \
     --inputbox "Enter your text" 10 60 \
     2>"$DIALOG_FILE"
-  dialog \
-    --title "Use this string:" \
-    --msgbox '\033['"${mode}${code}m$(cat "$DIALOG_FILE")"'\033[0m' 10 60
+  echo
+  echo "Use this string:"
+  echo "\\e[${FORMATTING};3${FOREGROUND_COLOR};4${BACKGROUND_COLOR}m$(cat "$DIALOG_FILE")\\e[0m"
   cleanup
+  exit 0
 }
 
-case "$#" in
-  0)
-    print_help ;;
-  1)
-    case "$1" in
-      -h|--help|help)
-        print_help ;;
-      -v|--version|version)
-        print_version ;;
-      -g|--generate|generate)
-        generate_sequence ;;
-      *)
-        die "invalid argument" ;;
-    esac ;;
-  2)
-    case "$1" in
-      -f|--foreground|f|foreground)
-        print_colorful_foreground "$2" ;;
-      -b|--background|b|background)
-        print_colorful_background "$2" ;;
-      *)
-        die "invalid argument" ;;
-    esac ;;
-  *)
-    die "too many arguments" ;;
-esac
+get_color(){
+  case "$1" in
+    black)      echo -n "0" ;;
+    red)        echo -n "1" ;;
+    green)      echo -n "2" ;;
+    yellow)     echo -n "3" ;;
+    blue)       echo -n "4" ;;
+    magenta)    echo -n "5" ;;
+    cyan)       echo -n "6" ;;
+    white)      echo -n "7" ;;
+    *) die "invalid color" ;;
+  esac
+}
+
+get_formatting(){
+  case "$1" in
+    bold)       echo -n "1" ;;
+    dim)        echo -n "2" ;;
+    italic)     echo -n "3" ;;
+    underline)  echo -n "4" ;;
+    *) die "invalid formatting" ;;
+  esac
+}
+
+print_formatted(){
+  echo -n "\033[${FORMATTING};3${FOREGROUND_COLOR};4${BACKGROUND_COLOR}m"
+  cat "$SOURCE_FILE"
+  echo -n "$RESETER"
+}
+
+PARSED_ARGS="$(getopt -a -n shclrz -o "hvgb:f:s:F:" --long "help,version,generate,background:,foreground:,source-file:,formatting" -- "$@")"
+VALID_ARGS=$?
+[ "$VALID_ARGS" = 0 ] || print_help
+eval set -- "$PARSED_ARGS"
+
+while :
+do
+  case "$1" in
+    -h | --help )
+      print_help; shift ;;
+    -v | --version )
+      print_version; shift ;;
+    -g | --generate )
+      generate_sequence; shift ;;
+    -b | --background )
+      export BACKGROUND_COLOR="$(get_color "$2")" ; shift 2 ;;
+    -f | --foreground )
+      export FOREGROUND_COLOR="$(get_color "$2")" ; shift 2 ;;
+    -F | --formatting )
+      export FORMATTING="$(get_formatting "$2")" ; shift 2 ;;
+    -s | --source-file )
+      export SOURCE_FILE="$2" ; shift 2 ;;
+    --)
+      shift; break ;;
+    *)
+      die "invalid arguments passed" ;;
+  esac
+done
+
+print_formatted
 
