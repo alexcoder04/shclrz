@@ -77,6 +77,12 @@ On Arch-based distros: `sudo pacman -R shclrz-git`
 On other distros: go to place where you cloned the git repo to and
 `sudo make uninstall`
 
+## How do I pronounce shclrz?
+
+Finally we have a program that is more difficult to pronounce as
+![sxhkd](https://github.com/baskerville/sxhkd) ! However just say "shell
+colorizer", that's easier...
+
 ## TODOs
 
  - [X] read stdin and output colorized version to stdout
