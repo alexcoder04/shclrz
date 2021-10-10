@@ -5,8 +5,8 @@
 VERSION="0.1.0"
 DIALOG_FILE="${TMPDIR:-/tmp}/shclrz-dialog-select"
 
-RESETER="\033[0m"
-SOURCE_FILE="/dev/stdin"
+export RESETER="\033[0m"
+export SOURCE_FILE="/dev/stdin"
 
 die(){
   echo "Error: $1" >"/dev/stderr"
@@ -60,7 +60,8 @@ EOF
 generate_sequence(){
   dialog \
     --radiolist "Background" 20 60 8 \
-    0 black on \
+    n default on \
+    0 black off \
     1 red off \
     2 green off \
     3 yellow off \
@@ -70,10 +71,12 @@ generate_sequence(){
     7 white off \
     2>"$DIALOG_FILE"
   export BACKGROUND_COLOR="$(cat "$DIALOG_FILE")"
+  [ "$BACKGROUND_COLOR" = n ] && export BACKGROUND_COLOR=""
 
   dialog \
     --radiolist "Foreground" 20 60 8 \
-    0 black on \
+    n default on \
+    0 black off \
     1 red off \
     2 green off \
     3 yellow off \
@@ -83,6 +86,7 @@ generate_sequence(){
     7 white off \
     2>"$DIALOG_FILE"
   export FOREGROUND_COLOR="$(cat "$DIALOG_FILE")"
+  [ "$FOREGROUND_COLOR" = n ] && export FOREGROUND_COLOR=""
 
   dialog \
     --radiolist "Formatting" 20 60 5 \
@@ -97,9 +101,24 @@ generate_sequence(){
   dialog \
     --inputbox "Enter your text" 10 60 \
     2>"$DIALOG_FILE"
+
+  if [ ! -z "$FORMATTING" ]; then
+    pre="$FORMATTING"
+  fi
+  if [ ! -z "$FOREGROUND_COLOR" ]; then
+    [ -z "$pre" ] \
+      && pre="3$FOREGROUND_COLOR" \
+      || pre="$pre;3$FOREGROUND_COLOR"
+  fi
+  if [ ! -z "$BACKGROUND_COLOR" ]; then
+    [ -z "$pre" ] \
+      && pre="4$BACKGROUND_COLOR" \
+      || pre="$pre;4$BACKGROUND_COLOR"
+  fi
+  [ -z "$pre" ] && pre="0"
   echo
   echo "Use this string:"
-  echo "\\e[${FORMATTING};3${FOREGROUND_COLOR};4${BACKGROUND_COLOR}m$(cat "$DIALOG_FILE")\\e[0m"
+  echo "\\e[${pre}m$(cat "$DIALOG_FILE")\\e[0m"
   cleanup
   exit 0
 }
@@ -129,7 +148,21 @@ get_formatting(){
 }
 
 print_formatted(){
-  echo -n "\033[${FORMATTING};3${FOREGROUND_COLOR};4${BACKGROUND_COLOR}m"
+  if [ ! -z "$FORMATTING" ]; then
+    prefix="$FORMATTING"
+  fi
+  if [ ! -z "$FOREGROUND_COLOR" ]; then
+    [ -z "$prefix" ] \
+      && prefix="3$FOREGROUND_COLOR" \
+      || prefix="$prefix;3$FOREGROUND_COLOR"
+  fi
+  if [ ! -z "$BACKGROUND_COLOR" ]; then
+    [ -z "$prefix" ] \
+      && prefix="4$BACKGROUND_COLOR" \
+      || prefix="$prefix;4$BACKGROUND_COLOR"
+  fi
+  [ -z "$prefix" ] && prefix="0"
+  echo -n "\033[${prefix}m"
   cat "$SOURCE_FILE"
   echo -n "$RESETER"
 }

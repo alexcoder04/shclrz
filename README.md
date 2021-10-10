@@ -1,22 +1,24 @@
 
 # shclrz - shell colorizer
 
-shclrz (as in **SH**ell **C**o**L**o**R**i**Z**e) is a simple shell script with
+shclrz (as in **SH**ell **C**o**L**o**R**i**Z**er) is a simple shell script with
 the goal to simplify creating colorful output in the shell.
+You can pipe text into it or generate ANSI escape sequences through a menu.
 
 ## Usage
 
 ```
-shclrz [OPTIONS] [COLOR]
+shclrz [OPTIONS]
 ```
 
-| option | alternative                         | function                 |
-|--------|-------------------------------------|--------------------------|
-| -h     | --help, help                        | Print help               |
-| -v     | --version, version                  | Print program version    |
-| -g     | --generate, generate                | Generate ANSI sequence   |
-| -f     | --foreground, f, foreground [COLOR] | specify foreground color |
-| -b     | --background, b, background [COLOR] | specify background color |
+| option         | alternative   | function                 |
+|----------------|---------------|--------------------------|
+| -h             | --help        | Print help               |
+| -v             | --version     | Print program version    |
+| -g             | --generate    | Generate ANSI sequence   |
+| -s SOURCE_FILE | --source-file | read from file           |
+| -f COLOR       | --foreground  | specify foreground color |
+| -b COLOR       | --background  | specify background color |
 
 ### Examples:
 
@@ -41,8 +43,6 @@ ls | shclrz -b blue
 Colors the output of ls with blue background.
 
 ### Note:
-
-You cannot use foreground and background at the same time.
 
 `-f` and `-b` options read the text from stdin; `-g` option provides an
 interactive menu.
@@ -70,7 +70,7 @@ cd shclrz
 sudo make install
 ```
 
-### **Un**installation
+### Uninstallation
 
 On Arch-based distros: `sudo pacman -R shclrz-git`
 

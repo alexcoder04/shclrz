@@ -6,28 +6,34 @@ shclrz - colorizing output in the shell
 
 .SH "SYNOPSIS"
 .PP
-shclrz [OPTION] [COLOR]
+shclrz [OPTIONS]
 
 .SH "DESCRIPTION"
 .PP
-shclrz (as in SHell CoLoRiZe) is a simple shell script with the goal to simplify creating colorful output in the shell.
+shclrz (as in SHell CoLoRiZer) is a simple shell script with the goal to simplify creating colorful output in the shell.
 
 .SH "OPTIONS"
-.SS "-h, --help, help"
+.SS "-h, --help"
 .PP
 Print help.
-.SS "-v, --version, version"
+.SS "-v, --version"
 .PP
 Print program version.
-.SS "-g, --generate, generate"
+.SS "-g, --generate"
 .PP
 Generate ANSI sequence
-.SS "-f, --foreground, f, foreground [COLOR]"
+.SS "-s [SOURCE_FILE], --source-file [SOURCE_FILE]"
+.PP
+Read from SOURCE_FILE instead of stdin
+.SS "-f [COLOR], --foreground [COLOR]"
 .PP
 Specify foreground color
-.SS "-b, --background, b, background [COLOR]"
+.SS "-b [COLOR], --background [COLOR]"
 .PP
 Specify background color
+.SS "-F [OPTION], --formatting [OPTION]"
+.PP
+Use a formatting option like bold, italic or underline
 
 .SH "EXAMPLES"
 .SS "shclrz -g"
