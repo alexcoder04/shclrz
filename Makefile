@@ -11,9 +11,10 @@ install:
 	install -Dm644 shclrz.1 "$(DESTDIR)$(PREFIX)/share/man/man1/shclrz.1"
 
 uninstall:
-	rm -fr "$(DESTDIR)$(PREFIX)/share/doc/$(NAME)"
-	rm -f "$(DESTDIR)$(PREFIX)/bin/shclrz"
-	rm -f "$(DESTDIR)$(PREFIX)/share/man/man1/shclrz.1"
+	$(RM) "$(DESTDIR)$(PREFIX)/bin/shclrz"
+	$(RM) -r "$(DESTDIR)$(PREFIX)/share/doc/$(NAME)"
+	$(RM) -r "$(DESTDIR)$(PREFIX)/share/licenses/$(NAME)"
+	$(RM) "$(DESTDIR)$(PREFIX)/share/man/man1/shclrz.1"
 
 .PHONY: install
 
