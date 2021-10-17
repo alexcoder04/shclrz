@@ -2,7 +2,7 @@
 # used resources:
 # https://en.wikipedia.org/wiki/ANSI_escape_code
 
-VERSION="0.1.0"
+VERSION="0.1.1"
 DIALOG_FILE="${TMPDIR:-/tmp}/shclrz-dialog-select"
 
 export RESETER="\033[0m"

@@ -80,14 +80,10 @@ On other distros: go to place where you cloned the git repo to and
 ## How do I pronounce shclrz?
 
 Finally we have a program that is more difficult to pronounce as
-[sxhkd](https://github.com/baskerville/sxhkd) ! However just say "shell
+[sxhkd](https://github.com/baskerville/sxhkd)! However just say "shell
 colorizer", that's easier...
 
 ## TODOs
 
- - [X] read stdin and output colorized version to stdout
- - [X] a menu with choosing a color, that outputs the appropriate ANSI sequence
- - [X] Makefile and PKGBUILD for installing
- - [X] manpage
  - [ ] 256-color support
 
