@@ -2,8 +2,11 @@
 # shclrz - shell colorizer
 
 shclrz (as in **SH**ell **C**o**L**o**R**i**Z**er) is a simple shell script with
-the goal to simplify creating colorful output in the shell.
-You can pipe text into it or generate ANSI escape sequences through a menu.
+the goal to simplify creating colored output in the shell. You don't need to
+remember the ANSI escape sequences anymore, you can just pipe your text into
+`shclrz` and the output will be colored.
+
+Also, you can generate ANSI escape sequences through an interactive menu.
 
 ## Usage
 
