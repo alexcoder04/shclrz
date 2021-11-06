@@ -2,7 +2,7 @@
 # used resources:
 # https://en.wikipedia.org/wiki/ANSI_escape_code
 
-VERSION="0.1.1"
+VERSION="0.1.2"
 DIALOG_FILE="${TMPDIR:-/tmp}/shclrz-dialog-select"
 
 export RESETER="\033[0m"
@@ -142,6 +142,7 @@ formatting:
   italic      3
   underline   4
 EOF
+  exit 0
 }
 
 get_color(){
