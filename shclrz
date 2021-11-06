@@ -32,6 +32,7 @@ Description: colorizing output in the shell
 Usage: shclrz [ -h | --help ]
               [ -v | --version ]
               [ -g | --generate ]
+              [ -i | --info ]
               [ -s | --source-file  SOURCE_FILE ]
               [ -b | --background   COLOR ]
               [ -f | --foreground   COLOR ]
@@ -123,6 +124,26 @@ generate_sequence(){
   exit 0
 }
 
+print_info(){
+  cat <<EOF
+colors:
+  black       0
+  red         1
+  green       2
+  yellow      3
+  blue        4
+  magenta     5
+  cyan        6
+  white       7
+
+formatting:
+  bold        1
+  dim         2
+  italic      3
+  underline   4
+EOF
+}
+
 get_color(){
   case "$1" in
     black)      echo -n "0" ;;
@@ -167,7 +188,7 @@ print_formatted(){
   echo -n "$RESETER"
 }
 
-PARSED_ARGS="$(getopt -a -n shclrz -o "hvgb:f:s:F:" --long "help,version,generate,background:,foreground:,source-file:,formatting" -- "$@")"
+PARSED_ARGS="$(getopt -a -n shclrz -o "hvgb:f:s:F:i" --long "help,version,generate,background:,foreground:,source-file:,formatting:,info" -- "$@")"
 VALID_ARGS=$?
 [ "$VALID_ARGS" = 0 ] || print_help
 eval set -- "$PARSED_ARGS"
@@ -189,6 +210,8 @@ do
       export FORMATTING="$(get_formatting "$2")" ; shift 2 ;;
     -s | --source-file )
       export SOURCE_FILE="$2" ; shift 2 ;;
+    -i | --info )
+      print_info ;;
     --)
       shift; break ;;
     *)
