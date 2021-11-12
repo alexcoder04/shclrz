@@ -3,7 +3,6 @@
 # https://en.wikipedia.org/wiki/ANSI_escape_code
 
 VERSION="0.2.0"
-DIALOG_FILE="${TMPDIR:-/tmp}/shclrz-dialog-select"
 
 export RESETER="\033[0m"
 export SOURCE_FILE="/dev/stdin"
@@ -51,7 +50,9 @@ Formatting options:
   italic        underline
 
 EOF
-  exit 0
+  [ -z "$1" ] \
+    && exit 0 \
+    || exit "$1"
 }
 
 print_info(){
@@ -121,7 +122,7 @@ print_formatted(){
 
 PARSED_ARGS="$(getopt -a -n shclrz -o "hvb:f:s:F:i" --long "help,version,background:,foreground:,source-file:,formatting:,info" -- "$@")"
 VALID_ARGS=$?
-[ "$VALID_ARGS" = 0 ] || print_help
+[ "$VALID_ARGS" = 0 ] || print_help 1
 eval set -- "$PARSED_ARGS"
 
 while :
