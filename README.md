@@ -6,49 +6,35 @@ the goal to simplify creating colored output in the shell. You don't need to
 remember the ANSI escape sequences anymore, you can just pipe your text into
 `shclrz` and the output will be colored.
 
-Also, you can generate ANSI escape sequences through an interactive menu.
-
 ## Usage
 
 ```
 shclrz [OPTIONS]
 ```
 
-| option           | alternative     | function                 |
-|------------------|-----------------|--------------------------|
-| `-h`             | `--help`        | Print help               |
-| `-v`             | `--version`     | Print program version    |
-| `-g`             | `--generate`    | Generate ANSI sequence   |
-| `-s SOURCE_FILE` | `--source-file` | read from file           |
-| `-f COLOR`       | `--foreground`  | specify foreground color |
-| `-b COLOR`       | `--background`  | specify background color |
+| option           | alternative                 | function                  |
+|------------------|-----------------------------|---------------------------|
+| `-h`             | `--help`                    | Print help                |
+| `-v`             | `--version`                 | Print program version     |
+| `-i`             | `--info`                    | Print color codes         |
+| `-s SOURCE_FILE` | `--source-file SOURCE_FILE` | read from file            |
+| `-f COLOR`       | `--foreground COLOR`        | specify foreground color  |
+| `-b COLOR`       | `--background COLOR`        | specify background color  |
+| `-F FORMATTING`  | `--formatting OPTION`       | specify formatting option |
 
 ### Examples:
 
 ```
-shclrz -g
+shclrz -f red -F underline <file.txt
 ```
 
-Opens an interactive menu to select the background/foreground color and enter
-the text. Returns a string which contains the ANSI color sequence for chosen
-color and text.
-
-```
-shclrz -f red <file.txt
-```
-
-Outputs the content of file.txt with red foreground.
+Outputs the content of file.txt underlined with red foreground.
 
 ```
 ls | shclrz -b blue
 ```
 
 Colors the output of ls with blue background.
-
-### Note:
-
-`-f` and `-b` options read the text from stdin; `-g` option provides an
-interactive menu.
 
 ### List of colors:
 

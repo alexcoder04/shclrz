@@ -19,9 +19,9 @@ Print help.
 .SS "-v, --version"
 .PP
 Print program version.
-.SS "-g, --generate"
+.SS "-i, --info"
 .PP
-Generate ANSI sequence
+Print list of color codes.
 .SS "-s [SOURCE_FILE], --source-file [SOURCE_FILE]"
 .PP
 Read from SOURCE_FILE instead of stdin
@@ -36,9 +36,6 @@ Specify background color
 Use a formatting option like bold, italic or underline
 
 .SH "EXAMPLES"
-.SS "shclrz -g"
-.PP
-Opens an interactive menu to select the background/foreground color and enter the text. Returns a string which contains the ANSI color sequence for chosen color and text.
 .SS "shclrz -f red <file.txt"
 .PP
 Outputs the content of file.txt with red foreground.

@@ -2,7 +2,7 @@
 # used resources:
 # https://en.wikipedia.org/wiki/ANSI_escape_code
 
-VERSION="0.1.2"
+VERSION="0.2.0"
 DIALOG_FILE="${TMPDIR:-/tmp}/shclrz-dialog-select"
 
 export RESETER="\033[0m"
@@ -31,7 +31,6 @@ Description: colorizing output in the shell
 
 Usage: shclrz [ -h | --help ]
               [ -v | --version ]
-              [ -g | --generate ]
               [ -i | --info ]
               [ -s | --source-file  SOURCE_FILE ]
               [ -b | --background   COLOR ]
@@ -39,9 +38,6 @@ Usage: shclrz [ -h | --help ]
               [ -F | --formatting   OPTION ]
 
 Note:
-  -g option provides an interactive menu,
-  -f and -b read text from stdin or a file
-
   not all formatting options are supported by all terminals
 
 List of colors:
@@ -55,72 +51,6 @@ Formatting options:
   italic        underline
 
 EOF
-  exit 0
-}
-
-generate_sequence(){
-  dialog \
-    --radiolist "Background" 20 60 8 \
-    n default on \
-    0 black off \
-    1 red off \
-    2 green off \
-    3 yellow off \
-    4 blue off \
-    5 magenta off \
-    6 cyan off \
-    7 white off \
-    2>"$DIALOG_FILE"
-  export BACKGROUND_COLOR="$(cat "$DIALOG_FILE")"
-  [ "$BACKGROUND_COLOR" = n ] && export BACKGROUND_COLOR=""
-
-  dialog \
-    --radiolist "Foreground" 20 60 8 \
-    n default on \
-    0 black off \
-    1 red off \
-    2 green off \
-    3 yellow off \
-    4 blue off \
-    5 magenta off \
-    6 cyan off \
-    7 white off \
-    2>"$DIALOG_FILE"
-  export FOREGROUND_COLOR="$(cat "$DIALOG_FILE")"
-  [ "$FOREGROUND_COLOR" = n ] && export FOREGROUND_COLOR=""
-
-  dialog \
-    --radiolist "Formatting" 20 60 5 \
-    0 none on \
-    1 bold off \
-    2 dim off \
-    3 italic off \
-    4 underline off \
-    2>"$DIALOG_FILE"
-  export FORMATTING="$(cat "$DIALOG_FILE")"
-
-  dialog \
-    --inputbox "Enter your text" 10 60 \
-    2>"$DIALOG_FILE"
-
-  if [ ! -z "$FORMATTING" ]; then
-    pre="$FORMATTING"
-  fi
-  if [ ! -z "$FOREGROUND_COLOR" ]; then
-    [ -z "$pre" ] \
-      && pre="3$FOREGROUND_COLOR" \
-      || pre="$pre;3$FOREGROUND_COLOR"
-  fi
-  if [ ! -z "$BACKGROUND_COLOR" ]; then
-    [ -z "$pre" ] \
-      && pre="4$BACKGROUND_COLOR" \
-      || pre="$pre;4$BACKGROUND_COLOR"
-  fi
-  [ -z "$pre" ] && pre="0"
-  echo
-  echo "Use this string:"
-  echo "\\e[${pre}m$(cat "$DIALOG_FILE")\\e[0m"
-  cleanup
   exit 0
 }
 
@@ -189,7 +119,7 @@ print_formatted(){
   echo -n "$RESETER"
 }
 
-PARSED_ARGS="$(getopt -a -n shclrz -o "hvgb:f:s:F:i" --long "help,version,generate,background:,foreground:,source-file:,formatting:,info" -- "$@")"
+PARSED_ARGS="$(getopt -a -n shclrz -o "hvb:f:s:F:i" --long "help,version,background:,foreground:,source-file:,formatting:,info" -- "$@")"
 VALID_ARGS=$?
 [ "$VALID_ARGS" = 0 ] || print_help
 eval set -- "$PARSED_ARGS"
@@ -201,8 +131,6 @@ do
       print_help; shift ;;
     -v | --version )
       print_version; shift ;;
-    -g | --generate )
-      generate_sequence; shift ;;
     -b | --background )
       export BACKGROUND_COLOR="$(get_color "$2")" ; shift 2 ;;
     -f | --foreground )
