@@ -14,9 +14,9 @@ shclrz [OPTIONS]
 
 | option           | alternative                 | function                  |
 |------------------|-----------------------------|---------------------------|
-| `-h`             | `--help`                    | Print help                |
-| `-v`             | `--version`                 | Print program version     |
-| `-i`             | `--info`                    | Print color codes         |
+| `-h`             | `--help`                    | print help                |
+| `-v`             | `--version`                 | print program version     |
+| `-i`             | `--info`                    | print color codes         |
 | `-s SOURCE_FILE` | `--source-file SOURCE_FILE` | read from file            |
 | `-f COLOR`       | `--foreground COLOR`        | specify foreground color  |
 | `-b COLOR`       | `--background COLOR`        | specify background color  |
@@ -53,11 +53,18 @@ sudo pacman -U shclrz-git-*.pkg.tar.zst
 ### Debian-based distros (Debian, Ubuntu, Linux Mint, ...)
 
 ```
-sudo apt update && sudo apt install make git dialog
+sudo apt update && sudo apt install make git
 git clone https://github.com/alexcoder04/shclrz.git
 cd shclrz
 sudo make install
 ```
+
+### Other distros
+
+1. Install `git` and `make`
+2. `git clone https://github.com/alexcoder04/shclrz.git`
+3. `cd shclrz`
+4. `sudo make install`
 
 ### Uninstallation
 
@@ -72,7 +79,7 @@ Finally we have a program that is more difficult to pronounce as
 [sxhkd](https://github.com/baskerville/sxhkd)! However just say "shell
 colorizer", that's easier...
 
-## TODOs
+## Planned features
 
  - [ ] 256-color support
 
