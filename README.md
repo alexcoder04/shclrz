@@ -79,7 +79,3 @@ Finally we have a program that is more difficult to pronounce as
 [sxhkd](https://github.com/baskerville/sxhkd)! However just say "shell
 colorizer", that's easier...
 
-## Planned features
-
- - [ ] 256-color support
-
