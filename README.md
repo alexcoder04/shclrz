@@ -28,7 +28,7 @@ shclrz [OPTIONS]
 shclrz -f red -F underline <file.txt
 ```
 
-Outputs the content of file.txt underlined with red foreground.
+Outputs the content of file.txt underlined and with red foreground.
 
 ```
 ls | shclrz -b blue
@@ -38,7 +38,11 @@ Colors the output of ls with blue background.
 
 ### List of colors:
 
-`black` `blue` `red` `magenta` `green` `cyan` `yellow` `white`
+`black`, `blue`, `red`, `magenta`, `green`, `cyan`, `yellow`, `white`
+
+### List of formatting options:
+
+`bold`, `dim`, `italic`, `underline`
 
 ## Installation
 
