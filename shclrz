@@ -56,23 +56,21 @@ EOF
 }
 
 print_info(){
-  cat <<EOF
-colors:
-  black       0
-  red         1
-  green       2
-  yellow      3
-  blue        4
-  magenta     5
-  cyan        6
-  white       7
+  echo "colors:
+  \033[40mblack       0\033[0m
+  \033[41mred         1\033[0m
+  \033[42mgreen       2\033[0m
+  \033[43myellow      3\033[0m
+  \033[44mblue        4\033[0m
+  \033[45mmagenta     5\033[0m
+  \033[46mcyan        6\033[0m
+  \033[47;30mwhite       7\033[0m
 
 formatting:
-  bold        1
-  dim         2
-  italic      3
-  underline   4
-EOF
+  \033[1mbold        1\033[0m
+  \033[2mdim         2\033[0m
+  \033[3mitalic      3\033[0m
+  \033[4munderline   4\033[0m"
   exit 0
 }
 
