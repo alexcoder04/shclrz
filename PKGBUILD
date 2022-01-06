@@ -1,7 +1,7 @@
 # Maintainer: alexcoder04 <https://github.com/alexcoder04>
 pkgname=shclrz-git
 _pkgname=shclrz
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
 epoch=
 pkgdesc="coloring output in the shell"

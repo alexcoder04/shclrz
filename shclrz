@@ -1,8 +1,18 @@
 #!/bin/sh
+#        _                        _            ___  _  _   
+#   __ _| | _____  _____ ___   __| | ___ _ __ / _ \| || |  
+#  / _` | |/ _ \ \/ / __/ _ \ / _` |/ _ \ '__| | | | || |_ 
+# | (_| | |  __/>  < (_| (_) | (_| |  __/ |  | |_| |__   _|
+#  \__,_|_|\___/_/\_\___\___/ \__,_|\___|_|   \___/   |_|  
+# 
+# Copyright (c) 2021 alexcoder04 <https://github.com/alexcoder04>
+# 
+# shclrz - coloring output in the shell
+# 
 # used resources:
 # https://en.wikipedia.org/wiki/ANSI_escape_code
 
-VERSION="0.2.0"
+VERSION="0.2.1"
 
 export RESETER="\033[0m"
 export SOURCE_FILE="/dev/stdin"
@@ -14,14 +24,14 @@ die(){
 
 print_version(){
   cat >>"/dev/stdout" <<EOF
-shclrz - colorizing output in the shell
+shclrz - coloring output in the shell
 v$VERSION
 EOF
 }
 
 print_help(){
   cat >>"/dev/stdout" <<EOF
-Description: colorizing output in the shell
+Description: coloring output in the shell
 
 Usage: shclrz [ -h | --help ]
               [ -v | --version ]
