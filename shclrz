@@ -17,11 +17,6 @@ print_version(){
 shclrz - colorizing output in the shell
 v$VERSION
 EOF
-  exit 0
-}
-
-cleanup(){
-  rm "$DIALOG_FILE"
 }
 
 print_help(){
@@ -50,9 +45,6 @@ Formatting options:
   italic        underline
 
 EOF
-  [ -z "$1" ] \
-    && exit 0 \
-    || exit "$1"
 }
 
 print_info(){
@@ -71,7 +63,6 @@ formatting:
   \033[2mdim         2\033[0m
   \033[3mitalic      3\033[0m
   \033[4munderline   4\033[0m"
-  exit 0
 }
 
 get_color(){
@@ -120,16 +111,22 @@ print_formatted(){
 
 PARSED_ARGS="$(getopt -a -n shclrz -o "hvb:f:s:F:i" --long "help,version,background:,foreground:,source-file:,formatting:,info" -- "$@")"
 VALID_ARGS=$?
-[ "$VALID_ARGS" = 0 ] || print_help 1
+if [ ! "$VALID_ARGS" = 0 ]; then
+  print_help
+  exit 1
+fi
+
 eval set -- "$PARSED_ARGS"
 
 while :
 do
   case "$1" in
     -h | --help )
-      print_help; shift ;;
+      print_help
+      exit 0;;
     -v | --version )
-      print_version; shift ;;
+      print_version
+      exit 0;;
     -b | --background )
       export BACKGROUND_COLOR="$(get_color "$2")" ; shift 2 ;;
     -f | --foreground )
@@ -139,7 +136,8 @@ do
     -s | --source-file )
       export SOURCE_FILE="$2" ; shift 2 ;;
     -i | --info )
-      print_info ;;
+      print_info
+      exit 0;;
     --)
       shift; break ;;
     *)
