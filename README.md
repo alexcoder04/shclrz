@@ -1,6 +1,9 @@
 
 # shclrz - shell colorizer
 
+**Warning:** project is in maintainence-only-mode. New features will be included
+in the Golang clone. Check it out: [alexcoder04/golored](https://github.com/alexcoder04/golored).
+
 shclrz (as in **SH**ell **C**o**L**o**R**i**Z**er) is a simple shell script with
 the goal to simplify creating colored output in the shell. You don't need to
 remember the ANSI escape sequences anymore, you can just pipe your text into
