@@ -3,8 +3,7 @@ name: Release
 
 on:
   push:
-    tags:
-    - "v*"
+    tags: ["v*"]
 
 jobs:
   release:
@@ -25,11 +24,8 @@ jobs:
     - name: Get changelog
       id: changelog
       run: |
-        git log --pretty=oneline "${{ steps.latest-tag.outputs.SECOND_LATEST_TAG }}...${{ steps.latest-tag.outputs.LATEST_TAG }}" \
+        git log --pretty=oneline "${{ steps.latest-tag.outputs.SECOND_LATEST_TAG }}..HEAD" \
           | cut -d " " -f2- | sed -e 's/^/ - /' >release.md
-    
-    - name: Checkout latest tag
-      run: "git checkout tags/${{ steps.latest-tag.outputs.LATEST_TAG }}"
 
     - name: Create tarball
       run: |
