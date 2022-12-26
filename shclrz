@@ -5,33 +5,43 @@
 # | (_| | |  __/>  < (_| (_) | (_| |  __/ |  | |_| |__   _|
 #  \__,_|_|\___/_/\_\___\___/ \__,_|\___|_|   \___/   |_|  
 # 
-# Copyright (c) 2021 alexcoder04 <https://github.com/alexcoder04>
+# Copyright (c) 2021-2022 alexcoder04 <https://github.com/alexcoder04>
 # 
 # shclrz - coloring output in the shell
 # 
 # used resources:
 # https://en.wikipedia.org/wiki/ANSI_escape_code
 
-VERSION="0.2.1"
+_shclrz_name="shclrz"
+_shclrz_version="0.3.0"
+_shclrz_description="coloring output in the shell"
 
-export RESETER="\033[0m"
-export SOURCE_FILE="/dev/stdin"
+_shclrz_reset="\033[0m"
+_shclrz_source="/dev/stdin"
 
-die(){
+if [ ! -z "$BASH_VERSION" ]; then
+  _shclrz_echo_args="-ne"
+else
+  _shclrz_echo_args="-n"
+fi
+
+_shclrz_die(){
   echo "Error: $1" >"/dev/stderr"
   exit 1
 }
 
-print_version(){
-  cat >>"/dev/stdout" <<EOF
-shclrz - coloring output in the shell
-v$VERSION
+# info functions {{{
+_shclrz_print_version(){
+  cat <<EOF
+$_shclrz_name - $_shclrz_description
+v$_shclrz_version
 EOF
 }
 
-print_help(){
+_shclrz_print_help(){
   cat >>"/dev/stdout" <<EOF
-Description: coloring output in the shell
+$_shclrz_name
+Description: $_shclrz_description
 
 Usage: shclrz [ -h | --help ]
               [ -v | --version ]
@@ -57,25 +67,27 @@ Formatting options:
 EOF
 }
 
-print_info(){
+_shclrz_print_info(){
   echo "colors:
-  \033[40mblack       0\033[0m
-  \033[41mred         1\033[0m
-  \033[42mgreen       2\033[0m
-  \033[43myellow      3\033[0m
-  \033[44mblue        4\033[0m
-  \033[45mmagenta     5\033[0m
-  \033[46mcyan        6\033[0m
-  \033[47;30mwhite       7\033[0m
+  \033[40mblack       $(_shclrz_get_color black)\033[0m
+  \033[41mred         $(_shclrz_get_color red)\033[0m
+  \033[42mgreen       $(_shclrz_get_color green)\033[0m
+  \033[43myellow      $(_shclrz_get_color yellow)\033[0m
+  \033[44mblue        $(_shclrz_get_color blue)\033[0m
+  \033[45mmagenta     $(_shclrz_get_color magenta)\033[0m
+  \033[46mcyan        $(_shclrz_get_color cyan)\033[0m
+  \033[47;30mwhite       $(_shclrz_get_color white)\033[0m
 
 formatting:
-  \033[1mbold        1\033[0m
-  \033[2mdim         2\033[0m
-  \033[3mitalic      3\033[0m
-  \033[4munderline   4\033[0m"
+  \033[1mbold        $(_shclrz_get_formatting bold)\033[0m
+  \033[2mdim         $(_shclrz_get_formatting dim)\033[0m
+  \033[3mitalic      $(_shclrz_get_formatting italic)\033[0m
+  \033[4munderline   $(_shclrz_get_formatting underline)\033[0m"
 }
+# }}}
 
-get_color(){
+# parsing functions {{{
+_shclrz_get_color(){
   case "$1" in
     black)      echo -n "0" ;;
     red)        echo -n "1" ;;
@@ -85,75 +97,114 @@ get_color(){
     magenta)    echo -n "5" ;;
     cyan)       echo -n "6" ;;
     white)      echo -n "7" ;;
-    *) die "invalid color" ;;
+    *) _shclrz_die "invalid color" ;;
   esac
 }
 
-get_formatting(){
+_shclrz_get_formatting(){
   case "$1" in
     bold)       echo -n "1" ;;
     dim)        echo -n "2" ;;
     italic)     echo -n "3" ;;
     underline)  echo -n "4" ;;
-    *) die "invalid formatting" ;;
+    *) _shclrz_die "invalid formatting" ;;
   esac
 }
+# }}}
 
-print_formatted(){
-  if [ ! -z "$FORMATTING" ]; then
-    prefix="$FORMATTING"
+# formatted print function {{{
+colorize(){
+  local prefix=""
+
+  if [ ! -z "$SHCLRZ_FORMATTING" ]; then
+    prefix="$SHCLRZ_FORMATTING"
   fi
-  if [ ! -z "$FOREGROUND_COLOR" ]; then
-    [ -z "$prefix" ] \
-      && prefix="3$FOREGROUND_COLOR" \
-      || prefix="$prefix;3$FOREGROUND_COLOR"
+
+  if [ ! -z "$SHCLRZ_FOREGROUND" ]; then
+    prefix="${prefix};3${SHCLRZ_FOREGROUND}"
   fi
-  if [ ! -z "$BACKGROUND_COLOR" ]; then
-    [ -z "$prefix" ] \
-      && prefix="4$BACKGROUND_COLOR" \
-      || prefix="$prefix;4$BACKGROUND_COLOR"
+
+  if [ ! -z "$SHCLRZ_BACKGROUND" ]; then
+    prefix="${prefix};4${SHCLRZ_BACKGROUND}"
   fi
-  [ -z "$prefix" ] && prefix="0"
-  echo -n "\033[${prefix}m"
-  cat "$SOURCE_FILE"
-  echo -n "$RESETER"
+
+  case "$prefix" in
+    ";" | ";;" | "") prefix="0" ;;
+  esac
+
+  echo "$_shclrz_echo_args" "\033[${prefix}m"
+  cat "$_shclrz_source"
+  echo "$_shclrz_echo_args" "$_shclrz_reset"
 }
+# }}}
 
-PARSED_ARGS="$(getopt -a -n shclrz -o "hvb:f:s:F:i" --long "help,version,background:,foreground:,source-file:,formatting:,info" -- "$@")"
-VALID_ARGS=$?
-if [ ! "$VALID_ARGS" = 0 ]; then
-  print_help
-  exit 1
+# run function (if called as stanalone file) {{{
+_shclrz_run(){
+  local PARSED_ARGS="$(getopt -a -n shclrz -o "hvb:f:s:F:i" --long "help,version,background:,foreground:,source-file:,formatting:,info" -- "$@")"
+  local VALID_ARGS=$?
+  if [ ! "$VALID_ARGS" = 0 ]; then
+    _shclrz_print_help
+    exit 1
+  fi
+
+  eval set -- "$PARSED_ARGS"
+
+  while :
+  do
+    case "$1" in
+      -h | --help )
+        _shclrz_print_help
+        exit 0;;
+      -v | --version )
+        _shclrz_print_version
+        exit 0;;
+      -b | --background )
+        export SHCLRZ_BACKGROUND="$(_shclrz_get_color "$2")" ; shift 2 ;;
+      -f | --foreground )
+        export SHCLRZ_FOREGROUND="$(_shclrz_get_color "$2")" ; shift 2 ;;
+      -F | --formatting )
+        export SHCLRZ_FORMATTING="$(_shclrz_get_formatting "$2")" ; shift 2 ;;
+      -s | --source-file )
+        _shclrz_source="$2" ; shift 2 ;;
+      -i | --info )
+        _shclrz_print_info
+        exit 0;;
+      --)
+        shift; break ;;
+      *)
+        _shclrz_die "invalid arguments passed" ;;
+    esac
+  done
+
+  colorize
+}
+# }}}
+
+if [ "$(basename "$0")" = "$_shclrz_name" ]; then
+  _shclrz_run "$@"
+else
+  FG_BLACK="\033[30m"
+  FG_RED="\033[31m"
+  FG_GREEN="\033[32m"
+  FG_YELLOW="\033[33m"
+  FG_BLUE="\033[34m"
+  FG_MAGENTA="\033[35m"
+  FG_CYAN="\033[36m"
+  FG_WHITE="\033[37m"
+
+  BG_BLACK="\033[40m"
+  BG_RED="\033[41m"
+  BG_GREEN="\033[42m"
+  BG_YELLOW="\033[43m"
+  BG_BLUE="\033[44m"
+  BG_MAGENTA="\033[45m"
+  BG_CYAN="\033[46m"
+  BG_WHITE="\033[47m"
+
+  FRM_BOLD="\033[1m"
+  FRM_DIM="\033[2m"
+  FRM_ITALIC="\033[3m"
+  FRM_UNDERLINE="\033[4m"
+
+  RESET="$_shclrz_reset"
 fi
-
-eval set -- "$PARSED_ARGS"
-
-while :
-do
-  case "$1" in
-    -h | --help )
-      print_help
-      exit 0;;
-    -v | --version )
-      print_version
-      exit 0;;
-    -b | --background )
-      export BACKGROUND_COLOR="$(get_color "$2")" ; shift 2 ;;
-    -f | --foreground )
-      export FOREGROUND_COLOR="$(get_color "$2")" ; shift 2 ;;
-    -F | --formatting )
-      export FORMATTING="$(get_formatting "$2")" ; shift 2 ;;
-    -s | --source-file )
-      export SOURCE_FILE="$2" ; shift 2 ;;
-    -i | --info )
-      print_info
-      exit 0;;
-    --)
-      shift; break ;;
-    *)
-      die "invalid arguments passed" ;;
-  esac
-done
-
-print_formatted
-

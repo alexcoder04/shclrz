@@ -1,8 +1,9 @@
 
 # shclrz - shell colorizer
 
-**Warning:** project is in maintainence-only-mode. New features will be included
-in the Golang clone. Check it out: [alexcoder04/golored](https://github.com/alexcoder04/golored).
+**Note:**
+There is a more heavy version of this project with more features written in Go.
+Check it out: [alexcoder04/golored](https://github.com/alexcoder04/golored).
 
 shclrz (as in **SH**ell **C**o**L**o**R**i**Z**er) is a simple shell script with
 the goal to simplify creating colored output in the shell. You don't need to
@@ -10,6 +11,8 @@ remember the ANSI escape sequences anymore, you can just pipe your text into
 `shclrz` and the output will be colored.
 
 ## Usage
+
+### As standalone program
 
 ```
 shclrz [OPTIONS]
@@ -25,7 +28,7 @@ shclrz [OPTIONS]
 | `-b COLOR`       | `--background COLOR`        | specify background color  |
 | `-F FORMATTING`  | `--formatting OPTION`       | specify formatting option |
 
-### Examples:
+#### Examples:
 
 ```
 shclrz -f red -F underline <file.txt
@@ -39,13 +42,42 @@ ls | shclrz -b blue
 
 Colors the output of ls with blue background.
 
-### List of colors:
+#### List of colors:
 
 `black`, `blue`, `red`, `magenta`, `green`, `cyan`, `yellow`, `white`
 
-### List of formatting options:
+#### List of formatting options:
 
 `bold`, `dim`, `italic`, `underline`
+
+### As a shell library
+
+You can also `source` shclrz. In that case, it will define a `colorize` function, into which you can pipe text which then will be colored.
+You can control the formatting with following variables: `$SHCLRZ_FOREGOUND`, `$SHCLRZ_BACKGROUND`, `$SHCLRZ_FORMATTING`.
+These variables have to be set to the number of the color/options; these numbers are available in `shclrz --info`.
+
+Also, it defines variables for all the colors and formatting options. Example:
+
+```sh
+source shclrz
+
+# red foreground
+echo -e "${FG_RED}Hello World${RESET}" # -e flag is only necessary for Bash, not for POSIX shells
+# blue background
+echo -e "${BG_BLUE}Hello World${RESET}"
+# bold text
+echo -e "${FRM_BOLD}Hello World${RESET}"
+```
+
+#### List of variables
+
+`FG_BLACK`, `FG_RED`, `FG_GREEN`, `FG_YELLOW`, `FG_BLUE`, `FG_MAGENTA`, `FG_CYAN`, `FG_WHITE`
+
+`BG_BLACK`, `BG_RED`, `BG_GREEN`, `BG_YELLOW`, `BG_BLUE`, `BG_MAGENTA`, `BG_CYAN`, `BG_WHITE`
+
+`FRM_BOLD`, `FRM_DIM`, `FRM_ITALIC`, `FRM_UNDERLINE`
+
+`RESET`
 
 ## Installation
 
@@ -85,4 +117,3 @@ On other distros: go to place where you cloned the git repo to and
 Finally we have a program that is more difficult to pronounce as
 [sxhkd](https://github.com/baskerville/sxhkd)! However just say "shell
 colorizer", that's easier...
-

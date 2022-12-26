@@ -43,6 +43,18 @@ Outputs the content of file.txt underlined and with red foreground.
 .PP
 Colors the output of ls with blue background.
 
+.SH "SOURCING"
+.PP
+You can also use shclrz by sourcing it. Then it defines a "colorize" function, into which you can pipe text. The formatting is then controlled by modifing the following variables:
+"SHCLRZ_BACKGROUND", "SHCLRZ_FOREGROUND", "SHCLRZ_FORMATTING". These must contain a number corresponding to the color, these can be found out using the "--info" flag.
+
+.PP
+Also, when you source shclrz, it defines variables containing the colors, e. g.
+.SS "source shclrz && echo -e $FG_RED Hello $RESET"
+
+.PP
+This prints "Hello" with red foreground. The "-e" flag is necessary for Bash, not for a POSIX shell.
+
 .SH "AUTHOR"
 .PP
 alexcoder04 (\fIhttps://github.com/alexcoder04/shclrz\fP)
