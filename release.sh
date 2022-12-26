@@ -62,8 +62,8 @@ release_arch(){
 
   # change package version and md5sum for the PKGBUILD
   echo "Updating PKGBUILD..."
-  sed -ie "s/^pkgver=.*\$/pkgver=$VERSION/" ".aur/PKGBUILD"
-  sed -ie "s/^md5sums=('.*')\$/md5sums=('$MD5SUM')/" ".aur/PKGBUILD"
+  sed -i "s/^pkgver=.*\$/pkgver=$VERSION/" ".aur/PKGBUILD"
+  sed -i "s/^md5sums=('.*')\$/md5sums=('$MD5SUM')/" ".aur/PKGBUILD"
 
   # generate .SRCINFO
   cd ".aur"
@@ -72,6 +72,7 @@ release_arch(){
 
   # push to AUR
   echo "Committing changes in the AUR package..."
+  git add PKGBUILD .SRCINFO
   git commit -S -m "update to $TAG_NAME"
   echo "Pushing changes to the AUR..."
   git push
