@@ -83,34 +83,26 @@ echo -e "${FRM_BOLD}Hello World${RESET}"
 
 ### Arch and Arch-based distros
 
-```
-wget https://raw.githubusercontent.com/alexcoder04/shclrz/main/PKGBUILD
-makepkg -cf
-sudo pacman -U shclrz-git-*.pkg.tar.zst
-```
-
-### Debian-based distros (Debian, Ubuntu, Linux Mint, ...)
-
-```
-sudo apt update && sudo apt install make git
-git clone https://github.com/alexcoder04/shclrz.git
-cd shclrz
-sudo make install
-```
+This project is available on the AUR as [shclrz](https://aur.archlinux.org/packages/shclrz). Either install it manually or use an AUR helper of your choice.
 
 ### Other distros
 
-1. Install `git` and `make`
-2. `git clone https://github.com/alexcoder04/shclrz.git`
-3. `cd shclrz`
-4. `sudo make install`
+1. Download the latest version of shclrz from the [releases page](https://github.com/alexcoder04/shclrz/releases/latest).
+2. `tar xf shclrz-*.tar.gz`
+3. `sudo make install`
 
 ### Uninstallation
 
-On Arch-based distros: `sudo pacman -R shclrz-git`
+On Arch-based distros:
 
-On other distros: go to place where you cloned the git repo to and
-`sudo make uninstall`
+```sh
+sudo pacman -R shclrz`
+```
+
+On other distros:
+```sh
+sudo rm -rfv /usr/bin/shclrz /usr/share/doc/shclrz /usr/share/licenses/shclrz /usr/share/man/man1/shclrz.1
+```
 
 ## How do I pronounce shclrz?
 

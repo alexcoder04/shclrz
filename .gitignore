@@ -1,1 +1,3 @@
 *.tar.gz
+# for the aur repo
+.aur
