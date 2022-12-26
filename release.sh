@@ -5,20 +5,20 @@ set -e
 
 REPO="https://github.com/alexcoder04/shclrz"
 
+# check for unstaged changes
+echo "Checking for unstaged changes..."
+if [ ! -z "$(git status -s)" ]; then
+  echo "You have unstaged changes, please commit them first"
+  exit 1
+fi
+
+# get current version
+echo "Finding current version..."
+VERSION="$(grep -E '^_shclrz_version=.*$' ./shclrz | cut -d "=" -f2 | tr -d '"' )"
+TAG_NAME="v$VERSION"
+
 release_default(){
   echo "Creating default release"
-
-  # check for unstaged changes
-  echo "Cheking for unstaged changes..."
-  if [ ! -z "$(git status -s)" ]; then
-    echo "You have unstaged changes, please commit them first"
-    exit 1
-  fi
-
-  # get current version
-  echo "Finding current version..."
-  VERSION="$(grep -E '^_shclrz_version=.*$' ./shclrz | cut -d "=" -f2 | tr -d '"' )"
-  TAG_NAME="v$VERSION"
 
   # check if this version already exists
   echo "Checking if $TAG_NAME already exists..."
@@ -39,12 +39,19 @@ release_default(){
 
 release_arch(){
   # check if we are on arch
-  if ! command -v makepkg; then
+  if ! command -v makepkg >/dev/null; then
     echo "You are not on Arch, not updating PKGBUILD"
     exit 1
   fi
 
   echo "Creating Arch Linux release"
+
+  echo "Checking if already the latest version..."
+  VERSION_ARCH="$(grep -E '^pkgver=.*$' ".aur/PKGBUILD" | cut -d "=" -f2)"
+  if [ "$VERSION_ARCH" = "$VERSION" ]; then
+    echo "PKGBUILD already latest version"
+    exit 1
+  fi
 
   # download the .tar.gz for the tag from github and calculate the ms5sum
   echo "Calculating the md5sum..."
@@ -75,7 +82,7 @@ case "$1" in
   arch) release_arch ;;
   *)
     release_default
-    # wait a little, so we are sure that teh tag is on github
+    # wait a little, so we are sure that the tag is on github
     sleep 5
     release_arch
     ;;
