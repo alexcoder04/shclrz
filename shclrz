@@ -13,7 +13,7 @@
 # https://en.wikipedia.org/wiki/ANSI_escape_code
 
 _shclrz_name="shclrz"
-_shclrz_version="0.3.0"
+_shclrz_version="0.3.1"
 _shclrz_description="coloring output in the shell"
 
 _shclrz_reset="\033[0m"

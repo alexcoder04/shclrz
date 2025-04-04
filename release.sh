@@ -54,16 +54,16 @@ release_arch(){
   fi
 
   # download the .tar.gz for the tag from github and calculate the ms5sum
-  echo "Calculating the md5sum..."
+  echo "Calculating the sha256sum..."
   cd "${TMPDIR:-/tmp}"
   wget -O "$TAG_NAME.tar.gz" "$REPO/archive/refs/tags/$TAG_NAME.tar.gz" || exit 1
-  MD5SUM="$(md5sum "$TAG_NAME.tar.gz" | cut -d " " -f1)"
+  SHA256SUM="$(sha256sum "$TAG_NAME.tar.gz" | cut -d " " -f1)"
   cd "$OLDPWD"
 
-  # change package version and md5sum for the PKGBUILD
+  # change package version and sha256sum for the PKGBUILD
   echo "Updating PKGBUILD..."
   sed -i "s/^pkgver=.*\$/pkgver=$VERSION/" ".aur/PKGBUILD"
-  sed -i "s/^md5sums=('.*')\$/md5sums=('$MD5SUM')/" ".aur/PKGBUILD"
+  sed -i "s/^sha256sums=('.*')\$/sha256sums=('$SHA256SUM')/" ".aur/PKGBUILD"
 
   # generate .SRCINFO
   cd ".aur"
